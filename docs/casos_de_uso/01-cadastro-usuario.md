@@ -28,9 +28,9 @@ Para acessar o sistema de monitoramento da produção.
 
 ### Fluxo Alternativo
 
-**E-mail inválido**
+**E-mail já cadastrado**
 
-1. O usuário informa um e-mail fora do domínio da empresa.
+1. O usuário informa um e-mail já existente no sistema.
 2. O sistema exibe mensagem de erro.
 3. O cadastro não é concluído.
 
@@ -39,12 +39,13 @@ Para acessar o sistema de monitoramento da produção.
 ## Critérios de Aceitação
 
 - O usuário deve informar nome, e-mail e senha.
-- O e-mail deve pertencer ao domínio da empresa.
-- O usuário deve ter mais de 18 anos.
+- Todos os campos obrigatórios devem ser preenchidos corretamente.
+- O sistema não deve permitir cadastro com e-mail já existente.
 - As senhas devem ser armazenadas de forma segura.
 
 ---
 
 ### Diagrama de Atividade
 
-<img width="701" height="534" alt="image" src="https://github.com/user-attachments/assets/e8ff8622-7dbd-40e0-80cb-0d822232a44d" />
+<img width="790" height="534" alt="image" src="https://github.com/user-attachments/assets/8d01d880-388b-4556-908d-3852ed5c75c1" />
+
