@@ -125,3 +125,25 @@ Com gráficos dinâmicos e filtros interativos, a PackBag pode:
 - Analisar picos de produção
 - Avaliar eficiência
 - Tomar decisões mais rápidas e seguras
+
+# 3º Semestre - Desenvolvimento de Sistemas Móveis
+No Terceiro Semestre, o projeto passa de uma UI baseada no PowerBi para visualizar os dados em Tempo Real, adquirindo informações de um banco MySQL, para um App Mobile, feito com o Framework da Google: O Flutter.
+Com esta ferramenta, conseguimos criar uma interface mais avançada para o nosso projeto, um aplicativo completo com login, registro, usuários de diferentes privilégios, visualiação de máquina em tempo real, sobre seu estado e progresso, e a integração de IA para a criação de resumos sobre as informações de produção.
+
+## Firestore e firebase_auth
+Tecnologias providenciadas pelo Firebase, que, respectivamente:
+
+### Firestore: 
+Substituindo o banco de dados do MySQL, o firestore armazena informações de usuários, da máquina e seus respectivos registros;
+
+### firebase_auth
+O firebase_auth é um pacote para o Flutter que implementa o recurso ´Authentication´ do Firebase, que permite o registros de usuários a partir de Email e Senha, além de outros recursos de gerenciamento de contas.
+É com ele que conseguimos manter o registro de nossos usuários, e suas informações.
+Com isso, conseguimos designar máquinas e equipamentos a usuários específicos, dentre outros.
+
+## 💠 Flutter:
+Flutter é um framework feito pela Google, que usa a liguagem de programação Dart como sua base, ele permite criar aplicativos para Android, IOS, Web, Windows e Linux baseados no mesmo código Dart, o que é excelente para portabilidade.
+No nosso projeto, focamos em usar o Flutter para o desenvolvimento de um aplicativo Android.
+
+### Estrutura do Aplicativo:
+O app possui tela de login, registro, home, configurações e telas de visualização para as respectivas máquinas. Usando a arquitura MVVM, que permite a separação dos visuais da lógica, isso permite a reutilização do cófigo, e a fácil expansão do projeto caso necessário.
