@@ -9,5 +9,5 @@ As senhas devem ser armazenadas usando hash seguro.
 ### RNF03 — Compatibilidade
 O sistema deve funcionar nos sistemas ANDROID e IOS.
 
-### RNF03 — Formatação
+### RNF04 — Formatação
 O sistema deve manter a formatação igual em todos os dispositivos móveis.

@@ -80,9 +80,3 @@ O sistema deve gerar uma visualização gráfica que represente a quantidade de 
 Objetivo: Gerar análises automáticas e insights inteligentes a partir dos dados coletados.
 
 O sistema deve utilizar inteligência artificial para gerar um resumo interpretativo da produção registrada. Esse resumo poderá destacar padrões, variações de desempenho e possíveis insights que auxiliem o usuário na compreensão dos resultados da produção.
-
----
-
-# Próximos Passos
-
-Os épicos serão detalhados em histórias de usuário e tarefas técnicas ao longo do desenvolvimento do projeto.
