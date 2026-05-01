@@ -1,7 +1,7 @@
 ## Regras de Negócio (RN)
 
 ### RN01 — Campos obrigatórios
-O sistema deve permitir o cadastro apenas se todos os campos obrigatórios forem preenchidos corretamente
+O sistema deve permitir o cadastro apenas se todos os campos obrigatórios forem preenchidos corretamente.
 
 ### RN02 — Inatividade
 Usuários inativos por mais de 90 dias devem logar novamente no sistema.
