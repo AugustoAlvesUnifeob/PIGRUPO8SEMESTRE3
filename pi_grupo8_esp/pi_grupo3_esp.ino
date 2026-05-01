@@ -8,7 +8,7 @@
 LiquidCrystal lcd(21, 22, 19, 18, 4, 23);
 
 const char* ssid = "Home-Alves-2.4Ghz";
-const char* password = "06bc047bea";
+const char* password = "06bc047bea"; 
 
 // Sensor
 const byte pinoFototransistor = 34;

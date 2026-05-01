@@ -1,11 +1,22 @@
 import 'package:PIGRUPO8SEMESTRE3main/ui/app_colors.dart';
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class SobreScreen extends StatefulWidget {
   const SobreScreen({super.key});
 
   @override
   State<SobreScreen> createState() => _SobreScreenState();
+
+  Future<void> PoliticaPriv() async {
+    final Uri url = Uri.parse('https://packbag.com.br/politica-de-privacidade');
+
+    if (!await launchUrl(url)) {
+      throw Exception('Could not launch $url');
+    } else {
+      throw Exception('Não foi possível abrir $url');
+    }
+  }
 }
 
 class _SobreScreenState extends State<SobreScreen> {
@@ -50,7 +61,6 @@ class _SobreScreenState extends State<SobreScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-
                     // ── Título ──────────────────────────────────────────
                     Text(
                       'SOBRE:',
@@ -102,19 +112,40 @@ class _SobreScreenState extends State<SobreScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          _sectionTitle(Icons.group_outlined, 'INTEGRANTES DO PROJETO'),
+                          _sectionTitle(
+                            Icons.group_outlined,
+                            'INTEGRANTES DO PROJETO',
+                          ),
                           const SizedBox(height: 12),
-                          _memberRow('Augusto Barreto Gomes Alves', 'Backend & Integração de Gráficos'),
+                          _memberRow(
+                            'Augusto Barreto Gomes Alves',
+                            'Backend & Integração de Gráficos',
+                          ),
                           _divider(),
-                          _memberRow('Mateus Graçadio Coelho', 'Arquitetura de Fluxos & Documentação'),
+                          _memberRow(
+                            'Mateus Graçadio Coelho',
+                            'Arquitetura de Fluxos & Documentação',
+                          ),
                           _divider(),
-                          _memberRow('Pedro Henrique Breda Domingues', 'Frontend – Telas do Dashboard e Visualizações'),
+                          _memberRow(
+                            'Pedro Henrique Breda Domingues',
+                            'Frontend – Telas do Dashboard e Visualizações',
+                          ),
                           _divider(),
-                          _memberRow('Felipe Grossi Pereira', 'Frontend – Telas de Autenticação e Usuário'),
+                          _memberRow(
+                            'Felipe Grossi Pereira',
+                            'Frontend – Telas de Autenticação e Usuário',
+                          ),
                           _divider(),
-                          _memberRow('João Vitor Zamai Martins', 'Backend & IA (Resumos automáticos com IA)'),
+                          _memberRow(
+                            'João Vitor Zamai Martins',
+                            'Backend & Integração com FirebaseAuth e IoT',
+                          ),
                           _divider(),
-                          _memberRow('Augusto de Pauli Duarte', 'Frontend – Outras Telas do Aplicativo'),
+                          _memberRow(
+                            'Augusto de Pauli Duarte',
+                            'Frontend – Outras Telas do Aplicativo',
+                          ),
                         ],
                       ),
                     ),
@@ -282,10 +313,7 @@ class _SobreScreenState extends State<SobreScreen> {
                 const SizedBox(height: 2),
                 Text(
                   role,
-                  style: TextStyle(
-                    fontSize: 11,
-                    color: AppColors.pretoClaro,
-                  ),
+                  style: TextStyle(fontSize: 11, color: AppColors.pretoClaro),
                 ),
               ],
             ),
@@ -303,9 +331,7 @@ class _SobreScreenState extends State<SobreScreen> {
       padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 16),
       decoration: BoxDecoration(
         color: AppColors.cinzaClaro2,
-        border: Border(
-          top: BorderSide(color: AppColors.cinzaClaro, width: 1),
-        ),
+        border: Border(top: BorderSide(color: AppColors.cinzaClaro, width: 1)),
       ),
       child: Column(
         children: [
@@ -351,10 +377,7 @@ class _SobreScreenState extends State<SobreScreen> {
           Text(
             '© 2026 Pack Bag. Criado com carinho por Agência G3 Propaganda',
             textAlign: TextAlign.center,
-            style: TextStyle(
-              fontSize: 10,
-              color: AppColors.pretoClaro,
-            ),
+            style: TextStyle(fontSize: 10, color: AppColors.pretoClaro),
           ),
         ],
       ),
