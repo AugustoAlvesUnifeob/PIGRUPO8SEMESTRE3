@@ -17,6 +17,8 @@ class MachineScreen extends StatefulWidget {
 class _MachineScreenState extends State<MachineScreen> {
   final ContagemCortesService _service = ContagemCortesService();
 
+  DateTime _dataSelecionada = DateTime.now();
+
   // Declarando as variáveis que o seu Card de informações precisa
   late Future<String?> _nomeMaquinaFuture;
   late Future<bool?> _estadoMaquinaFuture;
@@ -26,6 +28,38 @@ class _MachineScreenState extends State<MachineScreen> {
     super.initState();
     _nomeMaquinaFuture = lerNomeMaquina();
     _estadoMaquinaFuture = lerEstadoMaquina();
+  }
+
+  Future<void> _escolherData(BuildContext context) async {
+    final DateTime? dataEscolhida = await showDatePicker(
+      context: context,
+      initialDate: _dataSelecionada,
+      firstDate: DateTime(2026, 4, 1),
+      lastDate: DateTime.now(),
+      builder: (context, child) {
+        return Theme(
+          data: Theme.of(context).copyWith(
+            colorScheme: ColorScheme.light(
+              primary: AppColors.cinza, // Cor do header do DatePicker
+              onPrimary: AppColors.preto, // Cor do texto do header
+              onSurface: AppColors.preto, // Cor dos textos dos dias
+            ),
+            textButtonTheme: TextButtonThemeData(
+              style: TextButton.styleFrom(
+                foregroundColor:
+                    AppColors.cinza, // Cor dos botões "Cancelar" e "OK"
+              ),
+            ),
+          ),
+          child: child!,
+        );
+      },
+    );
+    if (dataEscolhida != null && dataEscolhida != _dataSelecionada) {
+      setState(() {
+        _dataSelecionada = dataEscolhida;
+      });
+    }
   }
 
   @override
@@ -57,11 +91,21 @@ class _MachineScreenState extends State<MachineScreen> {
             ),
             child: Icon(Icons.accessibility, size: 30, color: AppColors.preto),
           ),
+
+          ElevatedButton(
+            onPressed: () => _escolherData(context),
+            style: ElevatedButton.styleFrom(
+              shape: const CircleBorder(),
+              padding: const EdgeInsets.all(10),
+              backgroundColor: AppColors.cinzaClaro,
+            ),
+            child: Icon(Icons.calendar_month, size: 30, color: AppColors.preto),
+          ),
         ],
       ),
 
       body: StreamBuilder<List<LogPHR>>(
-        stream: _service.getLogsDeHoje(),
+        stream: _service.getLogsPorData(_dataSelecionada),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(
@@ -90,11 +134,24 @@ class _MachineScreenState extends State<MachineScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                // 3. Gráfico Inferior
-                _buildGraficoHoras(spotsGrafico),
+                _buildMachineInfoCard(),
                 const SizedBox(height: 24),
 
-                _buildMachineInfoCard(),
+                const SizedBox(height: 20),
+
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      '---------------',
+                      style: TextStyle(color: AppColors.preto),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 20),
+
+                _buildGraficoHoras(spotsGrafico),
                 const SizedBox(height: 24),
 
                 // 2. Cards Superiores
@@ -106,6 +163,7 @@ class _MachineScreenState extends State<MachineScreen> {
                     _buildCardMeta(percentualMeta),
                   ],
                 ),
+
                 const SizedBox(height: 40),
               ],
             ),
@@ -116,90 +174,78 @@ class _MachineScreenState extends State<MachineScreen> {
   }
 
   Widget _buildMachineInfoCard() {
-    return Container(
-      padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(
-        color: AppColors.cinzaClaro,
-        borderRadius: BorderRadius.circular(16),
-      ),
-
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          FutureBuilder<String?>(
-            future: _nomeMaquinaFuture,
-            builder: (context, snapshot) {
-              String textoNome = 'Nome da Máquina: ';
-
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                textoNome += 'Carregando...';
-              } else if (snapshot.hasError) {
-                textoNome += 'Erro ao carregar';
-              } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
-                textoNome += snapshot.data!;
-              } else {
-                textoNome += 'Usuário precisa selecionar um dispositivo';
-              }
-
-              return Text(
-                textoNome,
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black87,
-                ),
-              );
-            },
-          ),
-
-          FutureBuilder<bool?>(
-            future: _estadoMaquinaFuture,
-            builder: (context, snapshot) {
-              String estadoTexto = 'Estado: ';
-
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                estadoTexto += 'Carregando...';
-              } else if (snapshot.hasError) {
-                estadoTexto += 'Erro ao carregar';
-              } else if (snapshot.hasData) {
-                estadoTexto += snapshot.data! ? 'OPERANDO' : 'PARADO';
-              } else {
-                estadoTexto += 'Indisponível';
-              }
-
-              return Row(
-                children: [
-                  Icon(
-                    Icons.circle,
-                    size: 15,
-                    color: snapshot.data == false ? Colors.red : Colors.green,
-                  ),
-                  const SizedBox(
-                    width: 4,
-                  ), // Pequeno espaço entre ícone e texto
-                  Text(
-                    estadoTexto,
-                    style: TextStyle(fontSize: 11, color: AppColors.preto),
-                  ),
-                ],
-              );
-            },
-          ),
-
-          const SizedBox(height: 12),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Image.asset(
-                'lib/assets/esp32.png',
-                width: 80,
-                height: 80,
-                fit: BoxFit.contain,
+    return Stack(
+      children: [
+        Container(
+          padding: const EdgeInsets.all(14),
+          decoration: BoxDecoration(
+            color: AppColors.cinzaClaro,
+            borderRadius: BorderRadius.circular(20),
+            boxShadow: [
+              BoxShadow(
+                color: AppColors.pretoClaro,
+                blurRadius: 6,
+                offset: const Offset(0, 3),
               ),
-              // Espaço para adicionar algum botão ou outra info do lado direito do ESP32 no futuro
             ],
           ),
-        ],
-      ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              FutureBuilder<String?>(
+                future: _nomeMaquinaFuture,
+                builder: (context, snapshot) {
+                  String nome = "Máquina de Corte";
+
+                  if (snapshot.hasData && snapshot.data!.isNotEmpty) {
+                    nome = snapshot.data!;
+                  }
+
+                  return Text(
+                    nome,
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                      color: AppColors.preto,
+                    ),
+                  );
+                },
+              ),
+
+              const SizedBox(height: 4),
+
+              FutureBuilder<bool?>(
+                future: _estadoMaquinaFuture,
+                builder: (context, snapshot) {
+                  bool ativo = snapshot.data ?? false;
+
+                  return Text(
+                    ativo ? "OPERANDO" : "PARADO",
+                    style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold,
+                      color: ativo ? Colors.green : Colors.red,
+                    ),
+                  );
+                },
+              ),
+              const SizedBox(height: 10),
+
+              Text(
+                "ESP32: CONECTADO",
+                style: TextStyle(fontSize: 12, color: AppColors.preto),
+              ),
+
+              const SizedBox(height: 10),
+
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [Image.asset('lib/assets/esp32.png', width: 70)],
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 

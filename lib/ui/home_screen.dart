@@ -3,6 +3,7 @@ import 'package:PIGRUPO8SEMESTRE3main/ui/app_colors.dart';
 import 'package:PIGRUPO8SEMESTRE3main/routes/app_routes.dart';
 import 'package:PIGRUPO8SEMESTRE3main/viewmodels/firebase_data/maquina.dart';
 import 'package:intl/intl.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -27,6 +28,16 @@ class _HomePageState extends State<HomePage> {
     _estadoMaquinaFuture = lerEstadoMaquina();
   }
 
+  Future<void> PoliticaPriv() async {
+    final Uri url = Uri.parse('https://packbag.com.br/politica-de-privacidade');
+
+    if (!await launchUrl(url)) {
+      throw Exception('Could not launch $url');
+    } else {
+      throw Exception('Não foi possível abrir $url');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -35,11 +46,7 @@ class _HomePageState extends State<HomePage> {
         backgroundColor: AppColors.cinza,
         iconTheme: IconThemeData(color: AppColors.preto),
         centerTitle: true,
-        title: Image.asset(
-          AppColors.logo,
-          width: 160,
-          height: 80,
-        ),
+        title: Image.asset(AppColors.logo, width: 160, height: 80),
         actions: [
           ElevatedButton(
             onPressed: () {
@@ -60,14 +67,12 @@ class _HomePageState extends State<HomePage> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-
             /// 🔹 CONTEÚDO COM PADDING
             Padding(
               padding: const EdgeInsets.all(14),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-
                   /// HEADER
                   Text(
                     "Bem-vindo(a)!",
@@ -79,10 +84,7 @@ class _HomePageState extends State<HomePage> {
                   ),
                   Text(
                     getDataFormatada(),
-                    style: TextStyle(
-                      fontSize: 13,
-                      color: AppColors.pretoClaro,
-                    ),
+                    style: TextStyle(fontSize: 13, color: AppColors.pretoClaro),
                   ),
 
                   const SizedBox(height: 20),
@@ -100,7 +102,10 @@ class _HomePageState extends State<HomePage> {
                           "Visualize seus dispositivos e monitore cada um deles.\n"
                           "Receba estimativas e previsões de produção.\n\n"
                           "Verifique o estado do dispositivo se está ativo ou não.",
-                          style: TextStyle(fontSize: 14, color: AppColors.preto),
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: AppColors.preto,
+                          ),
                         ),
                       ),
 
@@ -108,7 +113,10 @@ class _HomePageState extends State<HomePage> {
                         top: 0,
                         left: 12,
                         child: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 12,
+                            vertical: 6,
+                          ),
                           decoration: BoxDecoration(
                             color: AppColors.cinza,
                             borderRadius: BorderRadius.circular(20),
@@ -123,8 +131,11 @@ class _HomePageState extends State<HomePage> {
                                 ),
                               ),
                               const SizedBox(width: 6),
-                              Icon(Icons.lightbulb,
-                                  color: AppColors.amarelo, size: 18),
+                              Icon(
+                                Icons.lightbulb,
+                                color: AppColors.amarelo,
+                                size: 18,
+                              ),
                             ],
                           ),
                         ),
@@ -135,8 +146,11 @@ class _HomePageState extends State<HomePage> {
                   const SizedBox(height: 25),
 
                   Center(
-                    child: Icon(Icons.arrow_downward,
-                        size: 28, color: AppColors.preto),
+                    child: Icon(
+                      Icons.arrow_downward,
+                      size: 28,
+                      color: AppColors.preto,
+                    ),
                   ),
 
                   const SizedBox(height: 25),
@@ -160,7 +174,6 @@ class _HomePageState extends State<HomePage> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-
                             FutureBuilder<String?>(
                               future: _nomeMaquinaFuture,
                               builder: (context, snapshot) {
@@ -215,10 +228,7 @@ class _HomePageState extends State<HomePage> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Image.asset(
-                                  'lib/assets/esp32.png',
-                                  width: 70,
-                                ),
+                                Image.asset('lib/assets/esp32.png', width: 70),
 
                                 ElevatedButton(
                                   style: ElevatedButton.styleFrom(
@@ -229,7 +239,9 @@ class _HomePageState extends State<HomePage> {
                                   ),
                                   onPressed: () {
                                     Navigator.pushNamed(
-                                        context, AppRoutes.machine);
+                                      context,
+                                      AppRoutes.machine,
+                                    );
                                   },
                                   child: Text(
                                     "VISUALIZAR",
@@ -337,54 +349,53 @@ class _HomePageState extends State<HomePage> {
             ),
 
             Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 20),
-                  color: Colors.black,
-                  child: Column(
-                    children: [
-                      Image.asset(
-                        AppColors.logop,
-                        height: 60,
-                      ),
+              width: double.infinity,
+              padding: const EdgeInsets.symmetric(vertical: 40, horizontal: 20),
+              color: Colors.black,
+              child: Column(
+                children: [
+                  Image.asset(AppColors.logop, height: 60),
 
-                      const SizedBox(height: 10),
+                  const SizedBox(height: 10),
 
-                      Text(
-                        "PACKBAG",
-                        style: TextStyle(
-                          color: AppColors.contraste ? AppColors.preto : AppColors.branco,
-                          fontWeight: FontWeight.bold,
-                          letterSpacing: 2,
-                        ),
-                      ),
-
-                      const SizedBox(height: 10),
-
-                      GestureDetector(
-                        onTap: () {
-                        },
-                        child: Text(
-                          "Política de privacidade",
-                          style: TextStyle(
-                            color: AppColors.laranja,
-                            fontSize: 12,
-                          ),
-                        ),
-                      ),
-
-                      const SizedBox(height: 15),
-
-                      Text(
-                        "© 2026 Pack Bag. Criado com carinho por Agência O3 Propaganda",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          color: AppColors.contraste ? AppColors.preto : AppColors.cinza,
-                          fontSize: 10,
-                        ),
-                      ),
-                    ],
+                  Text(
+                    "PACKBAG",
+                    style: TextStyle(
+                      color: AppColors.contraste
+                          ? AppColors.preto
+                          : AppColors.branco,
+                      fontWeight: FontWeight.bold,
+                      letterSpacing: 2,
+                    ),
                   ),
-                )
+
+                  const SizedBox(height: 10),
+
+                  GestureDetector(
+                    onTap: () {
+                      PoliticaPriv();
+                    },
+                    child: Text(
+                      "Política de privacidade",
+                      style: TextStyle(color: AppColors.laranja, fontSize: 12),
+                    ),
+                  ),
+
+                  const SizedBox(height: 15),
+
+                  Text(
+                    "© 2026 Pack Bag. Criado com carinho por Agência O3 Propaganda",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: AppColors.contraste
+                          ? AppColors.preto
+                          : AppColors.cinza,
+                      fontSize: 10,
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ],
         ),
       ),
@@ -412,10 +423,7 @@ class _HomePageState extends State<HomePage> {
             children: [
               Icon(icon, color: AppColors.preto),
               const SizedBox(height: 5),
-              Text(
-                text,
-                style: TextStyle(color: AppColors.preto),
-              ),
+              Text(text, style: TextStyle(color: AppColors.preto)),
             ],
           ),
         ),

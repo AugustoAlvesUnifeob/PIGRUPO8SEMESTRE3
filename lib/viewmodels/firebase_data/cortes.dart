@@ -27,21 +27,19 @@ class LogPHR {
   }
 }
 
-// 2. A Classe de Serviço (Lógica e Firebase)
 class ContagemCortesService {
-  // Defina a meta diária da sua máquina aqui
   final int metaDiaria = 200;
+  final int lote = 50;
 
-  // Busca os dados do Firebase em Tempo Real (Stream)
-  Stream<List<LogPHR>> getLogsDeHoje() {
-    DateTime agora = DateTime.now();
-    // Formata a data para ficar igual ao seu banco: YYYY-MM-DD
-    String dataHoje =
-        "${agora.year}-${agora.month.toString().padLeft(2, '0')}-${agora.day.toString().padLeft(2, '0')}";
+  // Busca os dados do Firebase
+  Stream<List<LogPHR>> getLogsPorData(DateTime dataSelecionada) {
+    // Formata a data
+    String dataFormatada =
+        "${dataSelecionada.year}-${dataSelecionada.month.toString().padLeft(2, '0')}-${dataSelecionada.day.toString().padLeft(2, '0')}";
 
     return FirebaseFirestore.instance
         .collection('LogsPHR')
-        .where('dataleitura', isEqualTo: dataHoje)
+        .where('dataleitura', isEqualTo: dataFormatada)
         .snapshots()
         .map(
           (snapshot) => snapshot.docs

@@ -3,6 +3,7 @@ import 'package:PIGRUPO8SEMESTRE3main/ui/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:restart_app/restart_app.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -27,15 +28,23 @@ class _SettingsScreenState extends State<SettingsScreen> {
     super.initState();
   }
 
+  Future<void> PoliticaPriv() async {
+    final Uri url = Uri.parse('https://packbag.com.br/politica-de-privacidade');
+
+    if (!await launchUrl(url)) {
+      throw Exception('Could not launch $url');
+    } else {
+      throw Exception('Não foi possível abrir $url');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.branco,
       appBar: AppBar(
         backgroundColor: AppColors.cinza,
-        iconTheme: IconThemeData(
-          color: AppColors.preto,
-        ),
+        iconTheme: IconThemeData(color: AppColors.preto),
         centerTitle: true,
         title: Image.asset(
           AppColors.logo,
@@ -46,7 +55,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         ),
         actions: [
           ElevatedButton(
-            onPressed: (){
+            onPressed: () {
               setState(() {
                 AppColors.mudarContraste();
               });
@@ -55,11 +64,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
               shape: const CircleBorder(),
               padding: const EdgeInsets.all(10),
               backgroundColor: AppColors.cinzaClaro,
-            ), 
-            child: 
-              Icon(Icons.accessibility, size: 30, color: AppColors.preto)
+            ),
+            child: Icon(Icons.accessibility, size: 30, color: AppColors.preto),
           ),
-        ]
+        ],
       ),
       body: SafeArea(
         child: Column(
@@ -122,54 +130,53 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ),
 
             Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 20),
-                  color: Colors.black,
-                  child: Column(
-                    children: [
-                      Image.asset(
-                        AppColors.logop,
-                        height: 60,
-                      ),
+              width: double.infinity,
+              padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 20),
+              color: Colors.black,
+              child: Column(
+                children: [
+                  Image.asset(AppColors.logop, height: 60),
 
-                      const SizedBox(height: 10),
+                  const SizedBox(height: 10),
 
-                      Text(
-                        "PACKBAG",
-                        style: TextStyle(
-                          color: AppColors.contraste ? AppColors.preto : AppColors.branco,
-                          fontWeight: FontWeight.bold,
-                          letterSpacing: 2,
-                        ),
-                      ),
-
-                      const SizedBox(height: 10),
-
-                      GestureDetector(
-                        onTap: () {
-                        },
-                        child: Text(
-                          "Política de privacidade",
-                          style: TextStyle(
-                            color: AppColors.laranja,
-                            fontSize: 12,
-                          ),
-                        ),
-                      ),
-
-                      const SizedBox(height: 15),
-
-                      Text(
-                        "© 2026 Pack Bag. Criado com carinho por Agência O3 Propaganda",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          color: AppColors.contraste ? AppColors.preto : AppColors.cinza,
-                          fontSize: 10,
-                        ),
-                      ),
-                    ],
+                  Text(
+                    "PACKBAG",
+                    style: TextStyle(
+                      color: AppColors.contraste
+                          ? AppColors.preto
+                          : AppColors.branco,
+                      fontWeight: FontWeight.bold,
+                      letterSpacing: 2,
+                    ),
                   ),
-                )
+
+                  const SizedBox(height: 10),
+
+                  GestureDetector(
+                    onTap: () {
+                      PoliticaPriv();
+                    },
+                    child: Text(
+                      "Política de privacidade",
+                      style: TextStyle(color: AppColors.laranja, fontSize: 12),
+                    ),
+                  ),
+
+                  const SizedBox(height: 15),
+
+                  Text(
+                    "© 2026 Pack Bag. Criado com carinho por Agência O3 Propaganda",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: AppColors.contraste
+                          ? AppColors.preto
+                          : AppColors.cinza,
+                      fontSize: 10,
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ],
         ),
       ),
@@ -189,11 +196,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
           color: AppColors.cinza,
           borderRadius: BorderRadius.circular(8),
           border: AppColors.contraste
-                                ? Border.all(
-                                    color: AppColors.preto,
-                                    width: 2,
-                                  )
-                                : null,
+              ? Border.all(color: AppColors.preto, width: 2)
+              : null,
         ),
         child: Text(
           label,
