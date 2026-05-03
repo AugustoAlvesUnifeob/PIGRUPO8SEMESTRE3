@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:PIGRUPO8SEMESTRE3main/viewmodels/firebase_data/maquina.dart';
-
 import 'package:PIGRUPO8SEMESTRE3main/viewmodels/firebase_data/cortes.dart';
+import 'package:PIGRUPO8SEMESTRE3main/viewmodels/ai_service.dart';
 
 class MachineScreen extends StatefulWidget {
   const MachineScreen({super.key});
@@ -15,11 +15,12 @@ class MachineScreen extends StatefulWidget {
 }
 
 class _MachineScreenState extends State<MachineScreen> {
+  final AiService _aiService = AiService();
+
   final ContagemCortesService _service = ContagemCortesService();
 
   DateTime _dataSelecionada = DateTime.now();
 
-  // Declarando as variáveis que o seu Card de informações precisa
   late Future<String?> _nomeMaquinaFuture;
   late Future<bool?> _estadoMaquinaFuture;
 
@@ -165,11 +166,65 @@ class _MachineScreenState extends State<MachineScreen> {
                 ),
 
                 const SizedBox(height: 40),
+
+                _buildAiInsightsSection(logs, _service.metaDiaria),
               ],
             ),
           );
         },
       ),
+    );
+  }
+
+  Widget _buildAiInsightsSection(List<LogPHR> logs, int meta) {
+    return FutureBuilder<String>(
+      future: _aiService.gerarInsights(logs, meta),
+      builder: (context, snapshot) {
+        return Container(
+          width: double.infinity,
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: AppColors.cinza,
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(color: AppColors.laranja),
+          ),
+
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Icon(Icons.auto_awesome, color: AppColors.preto),
+                  const SizedBox(width: 8),
+                  Text(
+                    "Insights da IA Gemini",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: AppColors.preto,
+                      fontSize: 16,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 12),
+              if (snapshot.connectionState == ConnectionState.waiting)
+                const Center(child: LinearProgressIndicator())
+              else if (snapshot.hasError)
+                const Text("Erro ao carregar insights.")
+              else
+                Text(
+                  snapshot.data ?? "",
+                  style: TextStyle(
+                    fontSize: 14,
+                    height: 1.4,
+                    color: AppColors.preto,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+            ],
+          ),
+        );
+      },
     );
   }
 

@@ -28,7 +28,7 @@ class LogPHR {
 }
 
 class ContagemCortesService {
-  final int metaDiaria = 200;
+  final int metaDiaria = 2000;
   final int lote = 50;
 
   // Busca os dados do Firebase

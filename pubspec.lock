@@ -184,14 +184,14 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
-  google_gemini:
+  google_generative_ai:
     dependency: "direct main"
     description:
-      name: google_gemini
-      sha256: a99e14ba2d497ec8e2b4c83e483204709a4ce3ec6c0a6021b3c4a9b2cd671150
+      name: google_generative_ai
+      sha256: "71f613d0247968992ad87a0eb21650a566869757442ba55a31a81be6746e0d1f"
       url: "https://pub.dev"
     source: hosted
-    version: "0.1.2"
+    version: "0.4.7"
   http:
     dependency: transitive
     description:
