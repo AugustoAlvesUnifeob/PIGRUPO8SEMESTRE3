@@ -41,10 +41,10 @@ dependencies:
   restart_app: ^1.7.3
   url_launcher: ^6.3.2
   firebase_auth: ^6.4.0
-  google_gemini: ^0.1.2
   fl_chart: ^1.2.0
   percent_indicator: ^4.2.5
   intl: ^0.18.0
+  google_generative_ai: ^0.4.0
   
 
 dev_dependencies:
