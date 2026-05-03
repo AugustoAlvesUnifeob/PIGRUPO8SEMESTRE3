@@ -1,17 +1,28 @@
 import 'package:google_generative_ai/google_generative_ai.dart';
 import 'package:PIGRUPO8SEMESTRE3main/viewmodels/firebase_data/cortes.dart';
+import 'package:PIGRUPO8SEMESTRE3main/viewmodels/firebase_data/fire_aiKey.dart';
 
 class AiService {
-  final String _apiKey =
-      'AIzaSyAx4osPL2aaDqj3J1B4gheLh2uY9mDTR6M'; //chave da api do gemini que criei no google ai studio (minha conta[zamai])
-  late final GenerativeModel _model;
+  GenerativeModel? _model;
 
-  AiService() {
-    _model = GenerativeModel(model: 'gemini-2.5-flash', apiKey: _apiKey);
+  Future<void> _initModel() async {
+    if (_model != null) return;
+
+    String key = await FireAikey.getGeminiKey();
+
+    if (key.isNotEmpty) {
+      _model = GenerativeModel(model: 'gemini-2.5-flash', apiKey: key);
+    }
   }
 
   Future<String> gerarInsights(List<LogPHR> logs, int meta) async {
-    if (logs.isEmpty) return "Sem dados de producao para analisar hoje.";
+    if (logs.isEmpty) return "Sem dados de produção para analisar hoje.";
+
+    await _initModel();
+
+    if (_model == null) {
+      return "Erro: Não foi possível carregar a configuração da IA.";
+    }
 
     String dadosFormatados = logs
         .map(
@@ -33,12 +44,12 @@ class AiService {
     2. Três insights curtos (ex: picos de produtividade, gargalos ou sugestões de manutenção).
     
     Responda de forma direta e profissional em português.
-    Seja direto eu não exiba os pensamentos
+    Seja direto e não exiba pensamentos ou processos de raciocínio.
     """;
 
     try {
       final content = [Content.text(prompt)];
-      final response = await _model.generateContent(content);
+      final response = await _model!.generateContent(content);
       return response.text ?? "Não foi possível gerar insights no momento.";
     } catch (e) {
       return "Erro ao consultar a IA: $e";
