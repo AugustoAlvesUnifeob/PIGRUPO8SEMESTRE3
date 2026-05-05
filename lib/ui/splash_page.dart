@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'package:PIGRUPO8SEMESTRE3main/routes/app_routes.dart';
 import 'package:PIGRUPO8SEMESTRE3main/viewmodels/viewmodels(firebase_auth)/auth_services.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class SplashPage extends StatefulWidget {
@@ -11,17 +13,45 @@ class SplashPage extends StatefulWidget {
 }
 
 class _SplashPageState extends State<SplashPage> {
+
   @override
   void initState() {
     super.initState();
+    _verificarUsuario();
+  }
 
-    Timer(const Duration(seconds: 3), () {
-      if (authService.value.currentUser != null) {
-        Navigator.pushReplacementNamed(context, AppRoutes.home);
-      } else {
+  Future<void> _verificarUsuario() async {
+    await Future.delayed(const Duration(seconds: 3));
+
+    final user = authService.value.currentUser;
+
+    if (user != null) {
+      final doc = await FirebaseFirestore.instance
+          .collection('usuarios')
+          .doc(user.uid)
+          .get();
+
+      if (!doc.exists || doc.data()?['ultimoLogin'] == null) {
+        // Se não tiver campo, manda logar de novo
+        await FirebaseAuth.instance.signOut();
         Navigator.pushReplacementNamed(context, AppRoutes.login);
+        return;
       }
-    });
+
+      final Timestamp ultimoLogin = doc['ultimoLogin'];
+      final dataUltimoLogin = ultimoLogin.toDate();
+
+      final diferenca = DateTime.now().difference(dataUltimoLogin).inDays;
+
+      if (diferenca >= 90) {
+        await FirebaseAuth.instance.signOut();
+        Navigator.pushReplacementNamed(context, AppRoutes.login);
+      } else {
+        Navigator.pushReplacementNamed(context, AppRoutes.home);
+      }
+    } else {
+      Navigator.pushReplacementNamed(context, AppRoutes.login);
+    }
   }
 
   @override
