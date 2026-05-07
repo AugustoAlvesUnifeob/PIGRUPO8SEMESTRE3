@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<a href="/criar" class="btn">+ Novo Usuário</a>
+<a href="/criarFilme" class="btn">+ Novo Filme</a>
+
+<table>
+    <tr>
+        <th>ID</th>
+        <th>Nome</th>
+        <th>Email</th>
+    </tr>
+
+    {% for u in usuarios %}
+    <tr>
+        <td>{{ u.id }}</td>
+        <td>{{ u.nome }}</td>
+        <td>{{ u.email }}</td>
+    </tr>
+    {% endfor %}
+</table>
+
+<table>
+    <tr>
+        <th>ID</th>
+        <th>Nome</th>
+        <th>Duração</th>
+        <th>Classificação Indicativa</th>
+    </tr>
+
+    {% for f in filmes %}
+    <tr>
+        <td>{{ f.id }}</td>
+        <td>{{ f.nome }}</td>
+        <td>{{ f.duracao }}</td>
+        <td>{{ f.classificacao }}</td>
+    </tr>
+    {% endfor %}
+</table>
+
+{% endblock %}

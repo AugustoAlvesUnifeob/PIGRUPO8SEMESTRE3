@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<form action="/salvarFilme" method="post">
+    <input type="text" name="nome" placeholder="Nome" required>
+    <input type="text" name="duracao" placeholder="Duração" required>
+    <input type="text" name="classificacao" placeholder="Classificação Indicativa" required>
+
+    <button type="submit" class="btn">Salvar</button>
+</form>
+
+<a href="/" class="voltar">← Voltar</a>
+
+{% endblock %}

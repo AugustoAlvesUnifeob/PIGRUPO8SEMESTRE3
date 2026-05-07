@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<form action="/salvar" method="post">
+    <input type="text" name="nome" placeholder="Nome" required>
+    <input type="email" name="email" placeholder="Email" required>
+
+    <button type="submit" class="btn">Salvar</button>
+</form>
+
+<a href="/" class="voltar">← Voltar</a>
+
+{% endblock %}
