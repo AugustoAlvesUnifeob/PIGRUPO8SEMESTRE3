@@ -36,3 +36,9 @@ Para organizar a responsabilidade de uso.
 ### Diagrama de Atividade
 
 <img width="770" height="794" alt="image" src="https://github.com/user-attachments/assets/f7e3fe6d-d217-4118-9ae4-2729deb5f8af" />
+
+---
+
+### Diagrama de Sequência
+
+<img width="599" height="538" alt="image" src="https://github.com/user-attachments/assets/734fef87-6d24-4d72-889f-06d5fd8df1f1" />
