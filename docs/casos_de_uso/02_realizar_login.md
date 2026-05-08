@@ -48,3 +48,8 @@ Para acessar o sistema de monitoramento de produção.
 
 <img width="775" height="574" alt="image" src="https://github.com/user-attachments/assets/c6c0a944-cb7a-41bb-8c82-cdc0a9300af0" />
 
+---
+
+### Diagrama de Sequência
+
+<img width="611" height="605" alt="image" src="https://github.com/user-attachments/assets/d6ac0a92-25f5-488c-a8a2-68c4102003a8" />
