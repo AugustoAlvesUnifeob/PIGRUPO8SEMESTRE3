@@ -39,3 +39,8 @@ Para entender rapidamente o desempenho do dia.
 
 <img width="816" height="524" alt="image" src="https://github.com/user-attachments/assets/7950aa4b-e5b6-4065-a4bb-36ec9e809855" />
 
+---
+
+### Diagrama de Sequência
+
+<img width="816" height="508" alt="image" src="https://github.com/user-attachments/assets/b3080789-a281-433b-8bb5-596d57368e40" />
