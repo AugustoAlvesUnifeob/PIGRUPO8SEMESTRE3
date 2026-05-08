@@ -52,4 +52,5 @@ Para acessar o sistema de monitoramento de produção.
 
 ### Diagrama de Sequência
 
-<img width="611" height="605" alt="image" src="https://github.com/user-attachments/assets/d6ac0a92-25f5-488c-a8a2-68c4102003a8" />
+<img width="610" height="604" alt="image" src="https://github.com/user-attachments/assets/446641b2-0bd9-4c4b-80bf-7a14f7804e9a" />
+
