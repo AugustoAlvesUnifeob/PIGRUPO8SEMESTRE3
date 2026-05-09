@@ -6,6 +6,7 @@ import 'package:percent_indicator/percent_indicator.dart';
 import 'package:PIGRUPO8SEMESTRE3main/viewmodels/firebase_data/maquina.dart';
 import 'package:PIGRUPO8SEMESTRE3main/viewmodels/firebase_data/cortes.dart';
 import 'package:PIGRUPO8SEMESTRE3main/viewmodels/ai_service.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class MachineScreen extends StatefulWidget {
   const MachineScreen({super.key});
@@ -15,12 +16,10 @@ class MachineScreen extends StatefulWidget {
 }
 
 class _MachineScreenState extends State<MachineScreen> {
+  late Stream<List<LogPHR>> _logsStream;
   final AiService _aiService = AiService();
-
   final ContagemCortesService _service = ContagemCortesService();
-
   DateTime _dataSelecionada = DateTime.now();
-
   late Future<String?> _nomeMaquinaFuture;
   late Future<bool?> _estadoMaquinaFuture;
 
@@ -29,6 +28,16 @@ class _MachineScreenState extends State<MachineScreen> {
     super.initState();
     _nomeMaquinaFuture = lerNomeMaquina();
     _estadoMaquinaFuture = lerEstadoMaquina();
+    _logsStream = _service.getLogsPorData(_dataSelecionada);
+  }
+
+  Future<void> PoliticaPriv() async {
+    final Uri url = Uri.parse('https://packbag.com.br/politica-de-privacidade');
+    if (!await launchUrl(url)) {
+      throw Exception('Could not launch $url');
+    } else {
+      throw Exception('Não foi possível abrir $url');
+    }
   }
 
   Future<void> _escolherData(BuildContext context) async {
@@ -40,15 +49,15 @@ class _MachineScreenState extends State<MachineScreen> {
       builder: (context, child) {
         return Theme(
           data: Theme.of(context).copyWith(
-            colorScheme: ColorScheme.light(
-              primary: AppColors.cinza, // Cor do header do DatePicker
-              onPrimary: AppColors.preto, // Cor do texto do header
-              onSurface: AppColors.preto, // Cor dos textos dos dias
+            colorScheme: ColorScheme.dark(
+              primary: Colors.grey, // Cor do header do DatePicker
+              onPrimary: Colors.white, // Cor do texto do header
+              onSurface: Colors.white, // Cor dos textos dos dias
             ),
             textButtonTheme: TextButtonThemeData(
               style: TextButton.styleFrom(
                 foregroundColor:
-                    AppColors.cinza, // Cor dos botões "Cancelar" e "OK"
+                    Colors.white, // Cor dos botões "Cancelar" e "OK"
               ),
             ),
           ),
@@ -56,14 +65,17 @@ class _MachineScreenState extends State<MachineScreen> {
         );
       },
     );
+
     if (dataEscolhida != null && dataEscolhida != _dataSelecionada) {
       setState(() {
         _dataSelecionada = dataEscolhida;
+        _logsStream = _service.getLogsPorData(_dataSelecionada);
       });
     }
   }
 
   @override
+  // App Bar
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.branco,
@@ -92,41 +104,27 @@ class _MachineScreenState extends State<MachineScreen> {
             ),
             child: Icon(Icons.accessibility, size: 30, color: AppColors.preto),
           ),
-
-          ElevatedButton(
-            onPressed: () => _escolherData(context),
-            style: ElevatedButton.styleFrom(
-              shape: const CircleBorder(),
-              padding: const EdgeInsets.all(10),
-              backgroundColor: AppColors.cinzaClaro,
-            ),
-            child: Icon(Icons.calendar_month, size: 30, color: AppColors.preto),
-          ),
         ],
       ),
 
       body: StreamBuilder<List<LogPHR>>(
-        stream: _service.getLogsPorData(_dataSelecionada),
+        stream: _logsStream,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(
               child: CircularProgressIndicator(color: Colors.grey),
             );
           }
-
           if (snapshot.hasError) {
             return Center(
               child: Text('Erro ao carregar dados: ${snapshot.error}'),
             );
           }
-
           final logs = snapshot.data ?? [];
           final int totalPecas = _service.calcularTotalPecas(logs);
           final double percentualMeta = _service.calcularPercentualMeta(
             totalPecas,
           );
-
-          final List<FlSpot> spotsGrafico = _service.gerarSpotsDoGrafico(logs);
 
           //Os elementos são construidos de baixo para cima, ou seja, aqui no SingleChild ele só chama eles, a construcao fica na parte inferior
 
@@ -137,7 +135,6 @@ class _MachineScreenState extends State<MachineScreen> {
               children: [
                 _buildMachineInfoCard(),
                 const SizedBox(height: 24),
-
                 const SizedBox(height: 20),
 
                 Row(
@@ -150,12 +147,28 @@ class _MachineScreenState extends State<MachineScreen> {
                     ),
                   ],
                 ),
+
                 const SizedBox(height: 20),
 
-                _buildGraficoHoras(spotsGrafico),
+                _buildGraficoMinutos(logs),
+                const SizedBox(height: 20),
+
+                _buildGraficoHoras(logs),
                 const SizedBox(height: 24),
 
-                // 2. Cards Superiores
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      '---------------',
+                      style: TextStyle(color: AppColors.preto),
+                    ),
+                  ],
+                ),
+
+                const SizedBox(height: 40),
+
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   crossAxisAlignment: CrossAxisAlignment.end,
@@ -167,7 +180,29 @@ class _MachineScreenState extends State<MachineScreen> {
 
                 const SizedBox(height: 40),
 
+                // grafico de producao nos dias
+                FutureBuilder<Map<String, double>>(
+                  future: ContagemCortesService().buscarProducaoUltimos7Dias(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Center(child: CircularProgressIndicator());
+                    }
+
+                    if (snapshot.hasError ||
+                        !snapshot.hasData ||
+                        snapshot.data!.isEmpty) {
+                      return const Text(
+                        "Não foi possível carregar o histórico.",
+                      );
+                    }
+                    return _buildGraficoHistoricoDias(snapshot.data!);
+                  },
+                ),
+                const SizedBox(height: 40),
+
                 _buildAiInsightsSection(logs, _service.metaDiaria),
+
+                const SizedBox(height: 40),
               ],
             ),
           );
@@ -197,7 +232,7 @@ class _MachineScreenState extends State<MachineScreen> {
                   Icon(Icons.auto_awesome, color: AppColors.preto),
                   const SizedBox(width: 8),
                   Text(
-                    "Insights da IA Gemini",
+                    "Insights:",
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       color: AppColors.preto,
@@ -295,7 +330,23 @@ class _MachineScreenState extends State<MachineScreen> {
 
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [Image.asset('lib/assets/esp32.png', width: 70)],
+                children: [
+                  Image.asset('lib/assets/esp32.png', width: 70),
+
+                  ElevatedButton(
+                    onPressed: () => _escolherData(context),
+                    style: ElevatedButton.styleFrom(
+                      shape: const CircleBorder(),
+                      padding: const EdgeInsets.all(10),
+                      backgroundColor: AppColors.pretoClaro,
+                    ),
+                    child: Icon(
+                      Icons.calendar_month,
+                      size: 30,
+                      color: AppColors.branco,
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
@@ -393,7 +444,30 @@ class _MachineScreenState extends State<MachineScreen> {
     );
   }
 
-  Widget _buildGraficoHoras(List<FlSpot> spotsGrafico) {
+  Widget _buildGraficoHoras(List<LogPHR> logs) {
+    if (logs.isEmpty) return const SizedBox();
+
+    Map<int, double> producaoPorHora = {};
+
+    for (var log in logs) {
+      int hora = log.dataHora.hour;
+      producaoPorHora[hora] =
+          (producaoPorHora[hora] ?? 0) + log.leitura.toDouble();
+    }
+
+    List<int> horasOrdenadas = producaoPorHora.keys.toList()..sort();
+
+    List<FlSpot> spotsGrafico = [];
+    for (int i = 0; i < horasOrdenadas.length; i++) {
+      spotsGrafico.add(
+        FlSpot(i.toDouble(), producaoPorHora[horasOrdenadas[i]]!),
+      );
+    }
+
+    double intervaloX = horasOrdenadas.length > 6
+        ? (horasOrdenadas.length / 5).ceil().toDouble()
+        : 1.0;
+
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
@@ -441,11 +515,20 @@ class _MachineScreenState extends State<MachineScreen> {
                   bottomTitles: AxisTitles(
                     sideTitles: SideTitles(
                       showTitles: true,
+                      interval: intervaloX,
                       getTitlesWidget: (value, meta) {
+                        int index = value.toInt();
+                        if (index < 0 || index >= horasOrdenadas.length)
+                          return const Text('');
+
+                        // Pega a hora exata da nossa lista ordenada e formata
+                        String horaFormatada =
+                            "${horasOrdenadas[index].toString().padLeft(2, '0')}:00";
+
                         return Padding(
                           padding: const EdgeInsets.only(top: 8.0),
                           child: Text(
-                            "${value.toInt()}:00",
+                            horaFormatada,
                             style: TextStyle(
                               fontSize: 10,
                               color: Colors.grey[700],
@@ -489,4 +572,268 @@ class _MachineScreenState extends State<MachineScreen> {
       ),
     );
   }
+
+  // Grafico da producao em minutos
+  Widget _buildGraficoMinutos(List<LogPHR> logs) {
+    List<FlSpot> spotsGrafico = [];
+    for (int i = 0; i < logs.length; i++) {
+      spotsGrafico.add(FlSpot(i.toDouble(), logs[i].leitura.toDouble()));
+    }
+
+    double intervaloX = logs.length > 5
+        ? (logs.length / 5).ceil().toDouble()
+        : 1.0;
+
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: Colors.grey[100],
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: Colors.grey.shade300, width: 2),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            decoration: BoxDecoration(
+              color: Colors.grey[300],
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Text(
+              'Produção por Minuto',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: Colors.grey[800],
+              ),
+            ),
+          ),
+          const SizedBox(height: 20),
+          SizedBox(
+            height: 200,
+            child: LineChart(
+              LineChartData(
+                minY: 0,
+                gridData: FlGridData(
+                  show: true,
+                  drawVerticalLine: true,
+                  horizontalInterval: 10,
+                  getDrawingHorizontalLine: (value) =>
+                      FlLine(color: Colors.grey.shade300, strokeWidth: 1),
+                ),
+                titlesData: FlTitlesData(
+                  topTitles: const AxisTitles(
+                    sideTitles: SideTitles(showTitles: false),
+                  ),
+                  rightTitles: const AxisTitles(
+                    sideTitles: SideTitles(showTitles: false),
+                  ),
+                  bottomTitles: AxisTitles(
+                    sideTitles: SideTitles(
+                      showTitles: true,
+                      interval: intervaloX,
+                      getTitlesWidget: (value, meta) {
+                        int index = value.toInt();
+                        if (index < 0 || index >= logs.length)
+                          return const Text('');
+
+                        // Formatação exata do minuto (Ex: 12:45)
+                        DateTime data = logs[index].dataHora;
+                        String minutoFormatado =
+                            "${data.hour.toString().padLeft(2, '0')}:${data.minute.toString().padLeft(2, '0')}";
+
+                        return Padding(
+                          padding: const EdgeInsets.only(top: 8.0),
+                          child: Text(
+                            minutoFormatado,
+                            style: TextStyle(
+                              fontSize: 10,
+                              color: Colors.grey[700],
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                  leftTitles: AxisTitles(
+                    sideTitles: SideTitles(
+                      showTitles: true,
+                      getTitlesWidget: (value, meta) {
+                        return Text(
+                          "${value.toInt()}",
+                          style: TextStyle(
+                            fontSize: 10,
+                            color: Colors.grey[700],
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ),
+                borderData: FlBorderData(show: false),
+                lineBarsData: [
+                  LineChartBarData(
+                    spots: spotsGrafico.isEmpty
+                        ? [const FlSpot(0, 0)]
+                        : spotsGrafico,
+                    isCurved: true,
+                    color: Colors.deepOrange,
+                    barWidth: 3,
+                    dotData: const FlDotData(show: true),
+                    belowBarData: BarAreaData(
+                      show: true,
+                      color: Colors.deepOrange.withOpacity(0.15),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// Grafico com a producao em dias diferentes (grafico de barras)
+Widget _buildGraficoHistoricoDias(Map<String, double> producaoUltimosDias) {
+  // Se ainda não carregou ou não tem dados, mostra um aviso ou fica vazio
+  if (producaoUltimosDias.isEmpty) {
+    return Container(
+      height: 200,
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: Colors.grey[100],
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: Colors.grey.shade300, width: 2),
+      ),
+      child: const Center(
+        child: Text(
+          "Carregando histórico...",
+          style: TextStyle(color: Colors.grey),
+        ),
+      ),
+    );
+  }
+
+  // Extrai as chaves (dias: Seg, Ter, Qua...) e valores (produção)
+  List<String> dias = producaoUltimosDias.keys.toList();
+  List<double> valores = producaoUltimosDias.values.toList();
+
+  // Encontra o valor máximo para definir o teto do gráfico de forma dinâmica
+  double maxValor = valores.reduce((a, b) => a > b ? a : b);
+  // Se for zero, força um mínimo para o gráfico não quebrar
+  if (maxValor == 0) maxValor = 10;
+
+  return Container(
+    padding: const EdgeInsets.all(20),
+    decoration: BoxDecoration(
+      color: Colors.grey[100],
+      borderRadius: BorderRadius.circular(20),
+      border: Border.all(color: Colors.grey.shade300, width: 2),
+    ),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          decoration: BoxDecoration(
+            color: Colors.grey[300],
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: Text(
+            'Histórico de Produção (Últimos Dias)',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              color: Colors.grey[800],
+            ),
+          ),
+        ),
+        const SizedBox(height: 20),
+        SizedBox(
+          height: 200,
+          child: BarChart(
+            BarChartData(
+              alignment: BarChartAlignment.spaceAround,
+              maxY: maxValor * 1.2, // Deixa 20% de margem no topo
+              gridData: FlGridData(
+                show: true,
+                drawVerticalLine: false,
+                horizontalInterval: maxValor > 50
+                    ? (maxValor / 4).ceilToDouble()
+                    : 10,
+                getDrawingHorizontalLine: (value) =>
+                    FlLine(color: Colors.grey.shade300, strokeWidth: 1),
+              ),
+              titlesData: FlTitlesData(
+                topTitles: const AxisTitles(
+                  sideTitles: SideTitles(showTitles: false),
+                ),
+                rightTitles: const AxisTitles(
+                  sideTitles: SideTitles(showTitles: false),
+                ),
+                leftTitles: AxisTitles(
+                  sideTitles: SideTitles(
+                    showTitles: true,
+                    getTitlesWidget: (value, meta) {
+                      if (value == 0 || value == maxValor * 1.2)
+                        return const Text('');
+                      return Text(
+                        "${value.toInt()}",
+                        style: TextStyle(fontSize: 10, color: Colors.grey[700]),
+                      );
+                    },
+                  ),
+                ),
+                bottomTitles: AxisTitles(
+                  sideTitles: SideTitles(
+                    showTitles: true,
+                    getTitlesWidget: (value, meta) {
+                      int index = value.toInt();
+                      if (index < 0 || index >= dias.length)
+                        return const Text('');
+                      return Padding(
+                        padding: const EdgeInsets.only(top: 8.0),
+                        child: Text(
+                          dias[index],
+                          style: TextStyle(
+                            fontSize: 10,
+                            color: Colors.grey[800],
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ),
+              borderData: FlBorderData(show: false),
+              barGroups: List.generate(
+                dias.length,
+                (index) => BarChartGroupData(
+                  x: index,
+                  barRods: [
+                    BarChartRodData(
+                      toY: valores[index],
+                      color: Colors.deepOrange, // Mesma cor do seu tema
+                      width: 16, // Largura da barra
+                      borderRadius: const BorderRadius.vertical(
+                        top: Radius.circular(4),
+                      ),
+                      // Opcional: Adiciona um fundo cinza claro atrás da barra
+                      backDrawRodData: BackgroundBarChartRodData(
+                        show: true,
+                        toY: maxValor * 1.2,
+                        color: Colors.grey.shade200,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+      ],
+    ),
+  );
 }

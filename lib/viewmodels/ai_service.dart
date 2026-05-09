@@ -5,6 +5,9 @@ import 'package:PIGRUPO8SEMESTRE3main/viewmodels/firebase_data/fire_aiKey.dart';
 class AiService {
   GenerativeModel? _model;
 
+  static String? _insightCacheado;
+  static DateTime? _ultimaGeracaoIA;
+
   Future<void> _initModel() async {
     if (_model != null) return;
 
@@ -17,6 +20,19 @@ class AiService {
 
   Future<String> gerarInsights(List<LogPHR> logs, int meta) async {
     if (logs.isEmpty) return "Sem dados de produção para analisar hoje.";
+
+    final agora = DateTime.now();
+
+    if (_insightCacheado != null && _ultimaGeracaoIA != null) {
+      if (agora.difference(_ultimaGeracaoIA!).inMinutes < 60) {
+        print(
+          "💡 [IA] Retornando insight do cache (gerado há ${agora.difference(_ultimaGeracaoIA!).inMinutes} min)",
+        );
+        return _insightCacheado!;
+      }
+    }
+
+    print("Gerando novo insight...");
 
     await _initModel();
 
@@ -50,7 +66,13 @@ class AiService {
     try {
       final content = [Content.text(prompt)];
       final response = await _model!.generateContent(content);
-      return response.text ?? "Não foi possível gerar insights no momento.";
+
+      final textoResposta =
+          response.text ?? "Não foi possível gerar insights no momento.";
+      _insightCacheado = textoResposta;
+      _ultimaGeracaoIA = agora;
+
+      return textoResposta;
     } catch (e) {
       return "Erro ao consultar a IA: $e";
     }
