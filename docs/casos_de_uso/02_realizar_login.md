@@ -1,4 +1,4 @@
-# Login e Autenticação
+# Realizar Login
 
 ## Descrição
 Permite que usuários cadastrados acessem o sistema utilizando e-mail e senha.
@@ -47,4 +47,10 @@ Para acessar o sistema de monitoramento de produção.
 ### Diagrama de Atividade
 
 <img width="775" height="574" alt="image" src="https://github.com/user-attachments/assets/c6c0a944-cb7a-41bb-8c82-cdc0a9300af0" />
+
+---
+
+### Diagrama de Sequência
+
+<img width="610" height="604" alt="image" src="https://github.com/user-attachments/assets/446641b2-0bd9-4c4b-80bf-7a14f7804e9a" />
 

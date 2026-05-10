@@ -1,4 +1,4 @@
-# Cadastro de Máquina
+# Cadastrar Máquina
 
 ## Descrição
 Permite cadastrar máquinas de corte no sistema para monitoramento da produção.
@@ -35,3 +35,10 @@ Para monitorar a produção de cada equipamento.
 ---
 
 <img width="697" height="547" alt="image" src="https://github.com/user-attachments/assets/65342ab4-8486-499c-940c-e10e118498e3" />
+
+---
+
+### Diagrama de Sequência
+
+<img width="631" height="508" alt="image" src="https://github.com/user-attachments/assets/9e98d436-2694-413f-84f1-e4c93af4ce16" />
+

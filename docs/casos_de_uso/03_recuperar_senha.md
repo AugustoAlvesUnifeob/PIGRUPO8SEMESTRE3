@@ -1,4 +1,4 @@
-# Recuperação de Senha
+# Recuperar Senha
 
 ## Descrição
 Permite que o usuário recupere o acesso à conta caso esqueça a senha.
@@ -37,3 +37,10 @@ Para voltar a acessar minha conta.
 ### Diagrama de Atividade
 
 <img width="767" height="684" alt="image" src="https://github.com/user-attachments/assets/a4a48b97-9e96-4afa-bd3f-b9c4aa8868f3" />
+
+---
+
+### Diagrama de Sequência
+
+<img width="802" height="495" alt="image" src="https://github.com/user-attachments/assets/c793ef75-2263-4223-8ba3-c6a1d42e5ab3" />
+

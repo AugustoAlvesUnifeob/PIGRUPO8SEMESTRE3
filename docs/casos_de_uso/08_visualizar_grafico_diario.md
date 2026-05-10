@@ -1,4 +1,4 @@
-# Gráfico de Produção Diária
+# Visualizar Gráfico Diário
 
 ## Descrição
 Exibe a produção diária das máquinas em formato de gráfico.
@@ -37,3 +37,8 @@ Para acompanhar o desempenho diário.
 
 <img width="552" height="573" alt="image" src="https://github.com/user-attachments/assets/0a95f885-1616-42cd-9049-2a7b810db400" />
 
+---
+
+### Diagrama de Sequência
+
+<img width="593" height="447" alt="image" src="https://github.com/user-attachments/assets/d03633d8-ce54-41ba-9bf8-9af795b368b8" />
