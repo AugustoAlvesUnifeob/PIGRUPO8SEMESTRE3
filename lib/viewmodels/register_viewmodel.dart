@@ -160,4 +160,16 @@ class RegisterViewmodel extends ChangeNotifier {
       return "Erro ao alterar usuário";
     }
   }
+
+  Future<void> recuperarSenha(String email) async {
+    try {
+      await FirebaseAuth.instance.sendPasswordResetEmail(
+        email: email.trim(),
+      );
+
+      print('E-mail de recuperação enviado!');
+    } on FirebaseAuthException catch (e) {
+      print('Erro: ${e.message}');
+    }
+  }
 }

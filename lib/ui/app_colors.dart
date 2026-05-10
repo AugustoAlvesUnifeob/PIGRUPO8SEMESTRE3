@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 class AppColors {
   static Color amarelo = Colors.yellow;
+  static Color marrom = Colors.brown;
   static Color laranja = Colors.deepOrange;
   static Color cinza = Colors.grey;
   static Color cinzaClaro = Color(0xFFE0E0E0);
@@ -18,6 +19,7 @@ class AppColors {
   static void mudarContraste(){
     if(contraste == false){
       laranja = Colors.yellow;
+      marrom = Colors.yellow;
       cinza = Colors.black;
       cinzaClaro = Colors.black;
       cinzaClaro2 = Colors.black;
@@ -31,6 +33,7 @@ class AppColors {
     }
     else{
       laranja = Colors.deepOrange;
+      marrom = Colors.brown;
       cinza = Colors.grey;
       cinzaClaro = Color(0xFFE0E0E0);
       cinzaClaro2 = Colors.grey.shade100;

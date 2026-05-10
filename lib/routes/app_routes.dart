@@ -13,5 +13,5 @@ abstract class AppRoutes {
   static const String sensores = '/sensor-list';
   static const String cadsensores = '/CadastroSensor';
   static const String altsensores = '/altSensor';
-  static const String dashboard = '/dashboard';
+  static const String recuperar = '/recuperar';
 }

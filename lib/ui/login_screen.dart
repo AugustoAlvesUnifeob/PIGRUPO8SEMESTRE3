@@ -201,6 +201,18 @@ class _LoginScreenState extends State<LoginScreen> {
                                         style: TextStyle(color: AppColors.contraste? AppColors.laranja : Colors.white),
                                       ),
                                     ),
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.pushNamed(
+                                          context,
+                                          AppRoutes.recuperar,
+                                        );
+                                      },
+                                      child: Text(
+                                        "Recuperar senha",
+                                        style: TextStyle(color: AppColors.contraste? AppColors.laranja : Colors.white),
+                                      ),
+                                    ),
                                   ],
                                 ),
                               ],

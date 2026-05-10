@@ -4,17 +4,17 @@ import 'package:PIGRUPO8SEMESTRE3main/ui/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:PIGRUPO8SEMESTRE3main/viewmodels/register_viewmodel.dart';
 
-class AlterarScreen extends StatefulWidget {
-  const AlterarScreen({super.key});
+class RecuperarScreen extends StatefulWidget {
+  const RecuperarScreen({super.key});
 
   @override
-  State<AlterarScreen> createState() => _AlterarScreenState();
+  State<RecuperarScreen> createState() => _RecuperarScreenState();
 }
 
-class _AlterarScreenState extends State<AlterarScreen> {
+class _RecuperarScreenState extends State<RecuperarScreen> {
   late final RegisterViewmodel viewModel;
 
-  late UsuarioModel usuario;
+  UsuarioModel? usuario;
 
   @override
   void initState() {
@@ -26,10 +26,14 @@ class _AlterarScreenState extends State<AlterarScreen> {
   void didChangeDependencies() {
     super.didChangeDependencies();
 
-    usuario = ModalRoute.of(context)!.settings.arguments as UsuarioModel;
+    final args = ModalRoute.of(context)?.settings.arguments;
 
-    viewModel.nomeController.text = usuario.nome;
-    viewModel.emailController.text = usuario.email;
+    if (args != null && args is UsuarioModel) {
+      usuario = args;
+
+      viewModel.nomeController.text = usuario!.nome;
+      viewModel.emailController.text = usuario!.email;
+    }
   }
 
   @override
@@ -106,12 +110,12 @@ class _AlterarScreenState extends State<AlterarScreen> {
                               padding: EdgeInsets.all(20),
                               child: Column(
                                 children: [
-                                  const SizedBox(height: 80),
+                                  const SizedBox(height: 160),
 
                                   Stack(
                                     alignment: Alignment.bottomRight,
                                     children: [
-                                      Icon(Icons.account_circle, size: 50, color: AppColors.preto),
+                                      Icon(Icons.key, size: 50, color: AppColors.preto),
                                       Icon(Icons.edit, size: 20, color: AppColors.preto),
                                     ],
                                   ),
@@ -147,107 +151,22 @@ class _AlterarScreenState extends State<AlterarScreen> {
                                           ),
                                         ),
 
-                                        const SizedBox(height: 20),
-
-                                        TextFormField(
-                                          controller: viewModel.nomeController,
-                                          keyboardType: TextInputType.text,
-                                          validator: viewModel.nomeValidator,
-                                          style: TextStyle(color: AppColors.preto),
-                                          decoration: InputDecoration(
-                                            labelText: "Usuário",
-                                            labelStyle: TextStyle(color: AppColors.pretoClaro),
-                                            enabledBorder: OutlineInputBorder(
-                                              borderSide: BorderSide(color: AppColors.pretoClaro),
-                                            ),
-
-                                            focusedBorder: OutlineInputBorder(
-                                              borderSide: BorderSide(color: AppColors.pretoClaro, width: 2),
-                                            ),
-                                            prefixIcon: Icon(
-                                              Icons.account_circle_outlined,
-                                              color: AppColors.preto
-                                            ),
-                                            filled: true,
-                                            fillColor: AppColors.branco,
-                                          ),
-                                        ),
-
-                                        const SizedBox(height: 20),
-
-                                        TextFormField(
-                                          controller:
-                                              viewModel.passwordController,
-                                          obscureText:
-                                              viewModel.obscurePassword,
-                                          validator:
-                                              viewModel.passwordValidator,
-                                          style: TextStyle(color: AppColors.preto),
-                                          decoration: InputDecoration(
-                                            labelText: "Senha",
-                                            labelStyle: TextStyle(color: AppColors.pretoClaro),
-                                            enabledBorder: OutlineInputBorder(
-                                              borderSide: BorderSide(color: AppColors.pretoClaro),
-                                            ),
-
-                                            focusedBorder: OutlineInputBorder(
-                                              borderSide: BorderSide(color: AppColors.pretoClaro, width: 2),
-                                            ),
-                                            prefixIcon: Icon(
-                                              Icons.lock_outlined,
-                                              color: AppColors.preto
-                                            ),
-                                            suffixIcon: IconButton(
-                                              onPressed: viewModel
-                                                  .togglePasswordVisibility,
-                                              icon: Icon(
-                                                viewModel.obscurePassword
-                                                    ? Icons.visibility
-                                                    : Icons.visibility_off,
-                                                color: AppColors.preto
-                                              ),
-                                            ),
-                                            filled: true,
-                                            fillColor: AppColors.branco,
-                                          ),
-                                        ),
-
                                         const SizedBox(height: 30),
 
                                         ElevatedButton(
                                           onPressed: viewModel.isLoading
                                               ? null
                                               : () async {
-                                                  final error = await viewModel
-                                                      .alterar(usuario.email);
+                                                  await viewModel.recuperarSenha(
+                                                    viewModel.emailController.text,
+                                                  );
 
-                                                  if (error == "form_error")
-                                                    return;
-
-                                                  if (error != null) {
-                                                    ScaffoldMessenger.of(
-                                                      context,
-                                                    ).showSnackBar(
-                                                      SnackBar(
-                                                        content: Text(error),
-                                                      ),
-                                                    );
-                                                  } else {
-                                                    ScaffoldMessenger.of(
-                                                      context,
-                                                    ).showSnackBar(
-                                                      const SnackBar(
-                                                        content: Text(
-                                                          "Usuário alterado com sucesso!",
-                                                        ),
-                                                      ),
-                                                    );
-
-                                                    Navigator.pushNamed(
-                                                      context,
-                                                      AppRoutes.home,
-                                                    );
-                                                  }
+                                                  ScaffoldMessenger.of(context).showSnackBar(
+                                                    SnackBar(
+                                                      content: Text("E-mail de recuperação enviado!"),
+                                                      backgroundColor: Colors.green,
+                                                    ),
+                                                  );
                                                 },
                                           style: ElevatedButton.styleFrom(
                                             backgroundColor: AppColors.laranja,
@@ -273,26 +192,12 @@ class _AlterarScreenState extends State<AlterarScreen> {
                                                       ),
                                                 )
                                               : Text(
-                                                  "Alterar Perfil",
+                                                  "Enviar E-mail",
                                                   style: TextStyle(
                                                     fontSize: 20,
                                                     color: AppColors.branco,
                                                   ),
                                                 ),
-                                        ),
-                                        const SizedBox(height: 2),
-                                        TextButton(
-                                          onPressed: () {
-                                            Navigator.pushNamed(
-                                              context,
-                                              AppRoutes.recuperar,
-                                              arguments: usuario,
-                                            );
-                                          },
-                                          child: Text(
-                                            "Recuperar senha",
-                                            style: TextStyle(color: AppColors.contraste? AppColors.laranja : AppColors.laranja),
-                                          ),
                                         ),
                                       ],
                                     ),

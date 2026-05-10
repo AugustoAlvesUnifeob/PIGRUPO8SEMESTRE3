@@ -50,14 +50,14 @@ class _MachineScreenState extends State<MachineScreen> {
         return Theme(
           data: Theme.of(context).copyWith(
             colorScheme: ColorScheme.dark(
-              primary: Colors.grey, // Cor do header do DatePicker
-              onPrimary: Colors.white, // Cor do texto do header
-              onSurface: Colors.white, // Cor dos textos dos dias
+              primary: AppColors.cinza, // Cor do header do DatePicker
+              onPrimary: AppColors.branco, // Cor do texto do header
+              onSurface: AppColors.branco, // Cor dos textos dos dias
             ),
             textButtonTheme: TextButtonThemeData(
               style: TextButton.styleFrom(
                 foregroundColor:
-                    Colors.white, // Cor dos botões "Cancelar" e "OK"
+                    AppColors.branco, // Cor dos botões "Cancelar" e "OK"
               ),
             ),
           ),
@@ -111,8 +111,8 @@ class _MachineScreenState extends State<MachineScreen> {
         stream: _logsStream,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(
-              child: CircularProgressIndicator(color: Colors.grey),
+            return Center(
+              child: CircularProgressIndicator(color: AppColors.cinza),
             );
           }
           if (snapshot.hasError) {
@@ -361,19 +361,19 @@ class _MachineScreenState extends State<MachineScreen> {
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           decoration: BoxDecoration(
-            color: Colors.brown,
+            color: AppColors.marrom,
             borderRadius: BorderRadius.circular(8),
           ),
-          child: const Text(
+          child: Text(
             'Peças Cortadas',
-            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+            style: TextStyle(color: AppColors.branco, fontWeight: FontWeight.bold),
           ),
         ),
         Container(
           width: 140,
           height: 140,
           decoration: BoxDecoration(
-            color: Colors.orange,
+            color: AppColors.laranja,
             borderRadius: BorderRadius.circular(20),
           ),
           child: Center(
@@ -381,7 +381,7 @@ class _MachineScreenState extends State<MachineScreen> {
               '$totalPecas',
               style: TextStyle(
                 fontSize: 48,
-                color: Colors.white,
+                color: AppColors.branco,
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -397,14 +397,14 @@ class _MachineScreenState extends State<MachineScreen> {
     return Column(
       children: [
         Container(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           decoration: BoxDecoration(
-            color: Colors.grey[800],
+            color: AppColors.cinza,
             borderRadius: BorderRadius.circular(8),
           ),
-          child: const Text(
+          child: Text(
             'META',
-            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+            style: TextStyle(color: AppColors.branco, fontWeight: FontWeight.bold),
           ),
         ),
 
@@ -412,7 +412,7 @@ class _MachineScreenState extends State<MachineScreen> {
           width: 120,
           height: 180,
           decoration: BoxDecoration(
-            color: Colors.grey[300],
+            color: AppColors.cinzaClaro,
             borderRadius: BorderRadius.circular(20),
           ),
           child: Row(
@@ -423,7 +423,7 @@ class _MachineScreenState extends State<MachineScreen> {
                 style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
-                  color: Colors.grey[800],
+                  color: AppColors.cinza,
                 ),
               ),
               RotatedBox(
