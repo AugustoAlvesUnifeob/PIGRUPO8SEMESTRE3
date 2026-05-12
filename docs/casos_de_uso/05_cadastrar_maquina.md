@@ -7,7 +7,7 @@ Permite cadastrar máquinas de corte no sistema para monitoramento da produção
 
 ## User Story
 
-Como administrador do sistema  
+Como usuário do sistema  
 Quero cadastrar máquinas  
 Para monitorar a produção de cada equipamento.
 
@@ -16,13 +16,13 @@ Para monitorar a produção de cada equipamento.
 ## Caso de Uso
 
 **Nome:** Cadastrar Máquina  
-**Ator:** Administrador
+**Ator:** Usuário
 
 ### Fluxo Principal
 
-1. O administrador acessa a tela de cadastro de máquinas.
+1. O usuário acessa a tela de cadastro de máquinas.
 2. O sistema solicita os dados da máquina.
-3. O administrador informa os dados.
+3. O usuário informa os dados.
 4. O sistema registra a máquina.
 
 ---
@@ -34,11 +34,12 @@ Para monitorar a produção de cada equipamento.
 
 ---
 
-<img width="697" height="547" alt="image" src="https://github.com/user-attachments/assets/65342ab4-8486-499c-940c-e10e118498e3" />
+<img width="697" height="547" alt="image" src="https://github.com/user-attachments/assets/7967b52a-08a0-4ba6-9346-11ad06f40d79" />
 
 ---
 
 ### Diagrama de Sequência
 
-<img width="631" height="508" alt="image" src="https://github.com/user-attachments/assets/9e98d436-2694-413f-84f1-e4c93af4ce16" />
+<img width="611" height="508" alt="image" src="https://github.com/user-attachments/assets/c684794c-560e-4132-90a8-b4e2e3f67355" />
+
 
