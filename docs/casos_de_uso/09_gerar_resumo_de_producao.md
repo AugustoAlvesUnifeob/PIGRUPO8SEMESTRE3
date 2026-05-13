@@ -7,7 +7,7 @@ Gera um resumo automático da produção utilizando inteligência artificial.
 
 ## User Story
 
-Como gestor da produção  
+Como usuário da produção  
 Quero receber um resumo automático da produção  
 Para entender rapidamente o desempenho do dia.
 
@@ -16,7 +16,7 @@ Para entender rapidamente o desempenho do dia.
 ## Caso de Uso
 
 **Nome:** Gerar Resumo de Produção  
-**Ator:** Gestor
+**Ator:** Usuário
 
 ### Fluxo Principal
 
@@ -37,10 +37,11 @@ Para entender rapidamente o desempenho do dia.
 
 ### Diagrama de Atividade
 
-<img width="816" height="524" alt="image" src="https://github.com/user-attachments/assets/7950aa4b-e5b6-4065-a4bb-36ec9e809855" />
+<img width="816" height="524" alt="image" src="https://github.com/user-attachments/assets/f134eb97-88fc-4fbe-96a3-41831f77c523" />
 
 ---
 
 ### Diagrama de Sequência
 
-<img width="816" height="508" alt="image" src="https://github.com/user-attachments/assets/b3080789-a281-433b-8bb5-596d57368e40" />
+<img width="818" height="508" alt="image" src="https://github.com/user-attachments/assets/864c3fa3-af5d-49eb-85db-22704fcb61aa" />
+
