@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_generative_ai/google_generative_ai.dart';
 import 'package:PIGRUPO8SEMESTRE3main/viewmodels/firebase_data/cortes.dart';
 import 'package:PIGRUPO8SEMESTRE3main/viewmodels/firebase_data/fire_aiKey.dart';
@@ -61,6 +62,7 @@ class AiService {
     
     Responda de forma direta e profissional em português.
     Seja direto e não exiba pensamentos ou processos de raciocínio.
+    Resposta sem asteristicos, separe e pontue os parágrafos.
     """;
 
     try {
@@ -74,7 +76,39 @@ class AiService {
 
       return textoResposta;
     } catch (e) {
-      return "Erro ao consultar a IA: $e";
+      final erro = e.toString().toLowerCase();
+
+      // detecta problemas de token/quota/auth
+      if (erro.contains("api key") ||
+          erro.contains("quota") ||
+          erro.contains("permission") ||
+          erro.contains("token") ||
+          erro.contains("authentication") ||
+          erro.contains("403")) {
+
+            DocumentSnapshot doc2 = await FirebaseFirestore.instance
+          .collection('apikey')
+          .doc('apiKey2')
+          .get();
+
+          String key = doc2.get('apiKey') as String;
+
+          _model = GenerativeModel(model: 'gemini-2.5-flash', apiKey: key);
+
+          final content = [Content.text(prompt)];
+          final response = await _model!.generateContent(content);
+
+          final textoResposta =
+              response.text ?? "Não foi possível gerar insights no momento.";
+
+          _insightCacheado = textoResposta;
+          _ultimaGeracaoIA = agora;
+
+          return textoResposta;
+      }
+      else {
+        return "Erro ao consultar a IA: $e";
+      }
     }
   }
 }

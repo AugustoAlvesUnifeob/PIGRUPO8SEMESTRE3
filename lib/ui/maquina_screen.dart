@@ -219,7 +219,7 @@ class _MachineScreenState extends State<MachineScreen> {
           width: double.infinity,
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color: AppColors.cinza,
+            color: AppColors.cinzaClaro,
             borderRadius: BorderRadius.circular(16),
             border: Border.all(color: AppColors.laranja),
           ),
@@ -575,6 +575,8 @@ class _MachineScreenState extends State<MachineScreen> {
 
   // Grafico da producao em minutos
   Widget _buildGraficoMinutos(List<LogPHR> logs) {
+    logs.sort((a, b) => a.dataHora.compareTo(b.dataHora));
+    
     List<FlSpot> spotsGrafico = [];
     for (int i = 0; i < logs.length; i++) {
       spotsGrafico.add(FlSpot(i.toDouble(), logs[i].leitura.toDouble()));
