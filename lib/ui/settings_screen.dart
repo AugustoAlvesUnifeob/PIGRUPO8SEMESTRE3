@@ -95,13 +95,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     const SizedBox(height: 24),
 
                     // Botão CONEXÕES
-                    _settingsButton(
+                    /*_settingsButton(
                       backgroundColor: AppColors.cinza,
                       label: 'CONEXÕES',
                       onTap: () {
                         Navigator.pushNamed(context, AppRoutes.sensores);
                       },
-                    ),
+                    ),*/
 
                     const SizedBox(height: 16),
 

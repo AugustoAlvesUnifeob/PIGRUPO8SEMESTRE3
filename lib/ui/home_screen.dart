@@ -284,7 +284,9 @@ class _HomePageState extends State<HomePage> {
                   /// OUTROS DISPOSITIVOS
                   InkWell(
                     borderRadius: BorderRadius.circular(20),
-                    onTap: () {},
+                    onTap: () {
+                      Navigator.pushNamed(context, AppRoutes.sensores);
+                    },
                     child: Container(
                       height: 90,
                       decoration: BoxDecoration(
