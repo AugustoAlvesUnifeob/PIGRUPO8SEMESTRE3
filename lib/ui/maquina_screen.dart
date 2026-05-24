@@ -366,7 +366,10 @@ class _MachineScreenState extends State<MachineScreen> {
           ),
           child: Text(
             'Peças Cortadas',
-            style: TextStyle(color: AppColors.branco, fontWeight: FontWeight.bold),
+            style: TextStyle(
+              color: AppColors.branco,
+              fontWeight: FontWeight.bold,
+            ),
           ),
         ),
         Container(
@@ -404,7 +407,10 @@ class _MachineScreenState extends State<MachineScreen> {
           ),
           child: Text(
             'META',
-            style: TextStyle(color: AppColors.branco, fontWeight: FontWeight.bold),
+            style: TextStyle(
+              color: AppColors.branco,
+              fontWeight: FontWeight.bold,
+            ),
           ),
         ),
 
@@ -521,7 +527,7 @@ class _MachineScreenState extends State<MachineScreen> {
                         if (index < 0 || index >= horasOrdenadas.length)
                           return const Text('');
 
-                        // Pega a hora exata da nossa lista ordenada e formata
+                        // Pega a hora exata da nossa lista ordenada e formatada
                         String horaFormatada =
                             "${horasOrdenadas[index].toString().padLeft(2, '0')}:00";
 
@@ -576,7 +582,7 @@ class _MachineScreenState extends State<MachineScreen> {
   // Grafico da producao em minutos
   Widget _buildGraficoMinutos(List<LogPHR> logs) {
     logs.sort((a, b) => a.dataHora.compareTo(b.dataHora));
-    
+
     List<FlSpot> spotsGrafico = [];
     for (int i = 0; i < logs.length; i++) {
       spotsGrafico.add(FlSpot(i.toDouble(), logs[i].leitura.toDouble()));
