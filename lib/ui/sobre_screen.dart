@@ -96,7 +96,9 @@ class _SobreScreenState extends State<SobreScreen> {
                             children: [
                               _chip('Protótipo'),
                               const SizedBox(width: 8),
-                              _chip('2026'),
+                              _chip('v1.0.0'),
+                              const SizedBox(width: 8),
+                              _chip('2025'),
                             ],
                           ),
                         ],
@@ -117,7 +119,7 @@ class _SobreScreenState extends State<SobreScreen> {
                           const SizedBox(height: 12),
                           _memberRow(
                             'Augusto Barreto Gomes Alves',
-                            'Backend & Integração com FirebaseAuth e IoT',
+                            'Backend & Integração de Gráficos',
                           ),
                           _divider(),
                           _memberRow(
@@ -137,7 +139,7 @@ class _SobreScreenState extends State<SobreScreen> {
                           _divider(),
                           _memberRow(
                             'João Vitor Zamai Martins',
-                            'Backend & Integração de Gráficos',
+                            'Backend & Integração com FirebaseAuth e IoT',
                           ),
                           _divider(),
                           _memberRow(

@@ -50,3 +50,35 @@ Future<bool?> lerEstadoMaquina() async {
   final dados = snapshot.data() as Map<String, dynamic>;
   return dados['Operando'] as bool?;
 }
+
+Stream<String?> streamNomeMaquina() {
+  return Stream.fromFuture(pegarId()).asyncExpand((idSensor) {
+    if (idSensor == null) return Stream.value(null);
+
+    return FirebaseFirestore.instance
+        .collection('Sensor')
+        .doc(idSensor)
+        .snapshots()
+        .map((snapshot) {
+          if (!snapshot.exists) return null;
+          final dados = snapshot.data() as Map<String, dynamic>;
+          return dados['NomeSensor'] as String?;
+        });
+  });
+}
+
+Stream<bool?> streamEstadoMaquina() {
+  return Stream.fromFuture(pegarId()).asyncExpand((idSensor) {
+    if (idSensor == null) return Stream.value(null);
+
+    return FirebaseFirestore.instance
+        .collection('Sensor')
+        .doc(idSensor)
+        .snapshots()
+        .map((snapshot) {
+          if (!snapshot.exists) return null;
+          final dados = snapshot.data() as Map<String, dynamic>;
+          return dados['Operando'] as bool?;
+        });
+  });
+}
